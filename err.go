@@ -1,4 +1,4 @@
-package protoerr
+package protoerror
 
 import (
 	"fmt"
@@ -21,7 +21,7 @@ type ValidationError struct {
 }
 
 func (ve ValidationError) Error() string {
-	return fmt.Sprintf("invalid %s: %s", ve.Field, ve.Reason)
+	return fmt.Sprintf("%s: %s", ve.Field, ve.Reason)
 }
 
 func (ve ValidationError) GRPCStatus() *status.Status {
@@ -39,7 +39,7 @@ func FormatValidationError(err error) error {
 			cause := FormatValidationError(causeRaw)
 			if subve, ok := cause.(*ValidationError); ok {
 				return &ValidationError{
-					Field:  ve.Field() + subve.Field,
+					Field:  ve.Field() + "." + subve.Field,
 					Reason: subve.Reason,
 				}
 			}
