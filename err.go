@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"gopkg.daemonl.com/log"
 )
 
 type protoValidationError interface {
@@ -69,6 +70,7 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 		res, err := handler(ctx, req)
 		if err != nil {
 			if _, ok := status.FromError(err); !ok {
+				log.WithField(ctx, "error", err.Error()).Error("Hiding Error")
 				return nil, status.Error(codes.Internal, "Internal Error")
 			}
 			return nil, err
